@@ -10,14 +10,7 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-
-// Replace with your primary network credentials
-const char* ssid2 = "TP-Link 2.4G";
-const char* password2 = "junelock";
-
-// Replace with your secondary network credentials
-const char* ssid = "BeeBee2.4";
-const char* password = "bravestreet599";
+#include "secrets.h"
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
