@@ -75,12 +75,16 @@ void FFTcode( void * parameter) {
     microseconds = micros();
 
     for(int i=0; i<samples; i++) {
-      int32_t digitalSample = 0;
-      size_t bytes_read = 0;
-      esp_err_t result = i2s_read(I2S_PORT, &digitalSample, sizeof(digitalSample), &bytes_read, /*portMAX_DELAY*/ 10);
-      //int bytes_read = i2s_pop_sample(I2S_PORT, (char *)&digitalSample, portMAX_DELAY); // no timeout
-      if (bytes_read > 0) micData = abs(digitalSample >> 16);
-      
+        int32_t digitalSample = 0;
+        size_t bytes_read = 0; 
+        //bytes_read = i2s_pop_sample(I2S_PORT, (char *)&digitalSample, portMAX_DELAY); // no timeout
+       esp_err_t result = i2s_read(I2S_PORT, &digitalSample, /*sizeof( digitalSample* )*/ 4, &bytes_read, /*portMAX_DELAY*/ 10); // no timeout
+       
+        if (bytes_read > 0) {
+          micData = abs(digitalSample >> 16);
+    }
+
+      //micDataSm = ((micData * 3) + micData)/4;  // We'll be passing smoothed micData to the volume routines as the A/D is a bit twitchy (not used here)
       vReal[i] = micData;                       // Store Mic Data in an array
       vImag[i] = 0;
       microseconds += sampling_period_us;
@@ -179,6 +183,7 @@ void setupAudio() {
   
   // Configuring the I2S driver and pins.
   // This function must be called before any I2S driver read/write operations.
+  Serial.println("go for i2s install");
   err = i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
   if (err != ESP_OK) {
     Serial.printf("Failed installing driver: %d\n", err);
@@ -194,29 +199,26 @@ void setupAudio() {
 
 
   // Test to see if we have a digital microphone installed or not.
-  float mean = 0.0;
-  int32_t samples[BLOCK_SIZE];
-  size_t num_bytes_read = 0;
-
-  esp_err_t result = i2s_read(I2S_PORT, &samples, BLOCK_SIZE, &num_bytes_read, portMAX_DELAY);
-  
-  /*int num_bytes_read = i2s_read_bytes(I2S_PORT,
-                                      (char *)samples,
-                                      BLOCK_SIZE,     // the doc says bytes, but its elements.
-                                      portMAX_DELAY); // no timeout*/
-  
-  int samples_read = num_bytes_read / 8;
-  if (samples_read > 0) {
-    for (int i = 0; i < samples_read; ++i) {
-      mean += samples[i];
-    }
-    mean = mean/BLOCK_SIZE/16384;
-    if (mean != 0.0) {
-      Serial.println("Digital microphone is present.");
-    } else {
-      Serial.println("Digital microphone is NOT present.");
-    }
-  }
+//  float mean = 0.0;
+//  int32_t samples[BLOCK_SIZE];
+//  size_t num_bytes_read = 0;
+//  i2s_read_bytes(I2S_PORT,
+//                                      &samples,
+//                                      BLOCK_SIZE,     // the doc says bytes, but its elements.
+//                                      portMAX_DELAY); // no timeout
+//  
+//  int samples_read = num_bytes_read / 8;
+//  if (samples_read > 0) {
+//    for (int i = 0; i < samples_read; ++i) {
+//      mean += samples[i];
+//    }
+//    mean = mean/BLOCK_SIZE/16384;
+//    if (mean != 0.0) {
+//      Serial.println("Digital microphone is present.");
+//    } else {
+//      Serial.println("Digital microphone is NOT present.");
+//    }
+//  }
   
   sampling_period_us = round(1000000*(1.0/SAMPLE_RATE));
   

@@ -12,12 +12,12 @@
 #include <ESPAsyncWebServer.h>
 
 // Replace with your primary network credentials
-const char* ssid = "PrimarySSID";
-const char* password = "PrimaryPassword";
+const char* ssid2 = "TP-Link 2.4G";
+const char* password2 = "junelock";
 
 // Replace with your secondary network credentials
-const char* ssid2 = "SecondarySSID";
-const char* password2 = "SecondaryPassword";
+const char* ssid = "BeeBee2.4";
+const char* password = "bravestreet599";
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -185,6 +185,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 }
 
 void initWebSocket() {
+  
   ws.onEvent(onEvent);
   server.addHandler(&ws);
 }
@@ -202,7 +203,9 @@ String processor(const String& var){
   if(var == "SQUELCHVALUE"){
     return String(squelch);
   }
+  Serial.println("done socket init");
   return "";
+  
 }
 
 void setupWebServer(){

@@ -51,7 +51,7 @@
 #include <EEPROM.h>
 
 #define EEPROM_SIZE 5
-#define LED_PIN     2
+#define LED_PIN     2     // 16 for lora // 2 for chris's
 #define M_WIDTH     16
 #define M_HEIGHT    16
 #define NUM_LEDS    (M_WIDTH * M_HEIGHT)
@@ -106,15 +106,17 @@ uint8_t colorTimer = 0;
 
 void setup() {
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds[0], NUM_LEDS);
-  Serial.begin(57600);
+  Serial.begin(115200);
+  delay(2000);
 
   setupWebServer();
   setupAudio();
 
   if (M_WIDTH == 8) numBands = 8;
   else numBands = 16;
+  //numBands = 8;
   barWidth = M_WIDTH / numBands;
-  
+  //showChris();
   EEPROM.begin(EEPROM_SIZE);
   
   // It should not normally be possible to set the gain to 255
@@ -245,6 +247,19 @@ void drawPatterns(uint8_t band) {
       break;
   }
 }
+void showChris() {
+  ScrollingMsg.SetFont(MatriseFontData);
+  ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 0);
+  ScrollingMsg.SetText((unsigned char *)"Christian VU", 12);
+  ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0xff, 0xff);
+  ScrollingMsg.SetScrollDirection(SCROLL_LEFT);
+  ScrollingMsg.SetFrameRate(160 / M_WIDTH);       // Faster for larger matrices
+
+  while(ScrollingMsg.UpdateText() == 0) {
+    FastLED.show();
+    delay(1);
+  }
+}
 
 void showIP(){
   char strIP[16] = "               ";
@@ -256,11 +271,11 @@ void showIP(){
   ScrollingMsg.SetText((unsigned char *)strIP, sizeof(strIP) - 1);
   ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0xff, 0xff, 0xff);
   ScrollingMsg.SetScrollDirection(SCROLL_LEFT);
-  ScrollingMsg.SetFrameRate(160 / M_WIDTH);       // Faster for larger matrices
+  ScrollingMsg.SetFrameRate(60 / M_WIDTH);       // Faster for larger matrices
 
   while(ScrollingMsg.UpdateText() == 0) {
-    FastLED.show();  
-    delay(1);
+    FastLED.show();
+    delay(10);
   }
 }
 
