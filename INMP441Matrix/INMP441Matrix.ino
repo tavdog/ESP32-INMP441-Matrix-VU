@@ -1,47 +1,4 @@
-/*
- * Web enabled FFT VU meter for a matrix, ESP32 and INMP441 digital mic.
- * The matrix width MUST be either 8 or a multiple of 16 but the height can
- * be any value. E.g. 8x8, 16x16, 8x10, 32x9 etc.
- * 
- * We are using the LEDMatrx library for easy setup of a matrix with various
- * wiring options. Options are:
- *  HORIZONTAL_ZIGZAG_MATRIX
- *  HORIZONTAL_MATRIX
- *  VERTICAL_ZIGZAG_MATRIX
- *  VERTICAL_MATRIX
- * If your matrix has the first pixel somewhere other than the bottom left
- * (default) then you can reverse the X or Y axis by writing -M_WIDTH and /
- * or -M_HEIGHT in the cLEDMatrix initialisation.
- * 
- * REQUIRED LIBRARIES
- * FastLED            Arduino libraries manager
- * ArduinoFFT         Arduino libraries manager
- * EEPROM             Built in
- * WiFi               Built in
- * AsyncTCP           https://github.com/me-no-dev/ESPAsyncWebServer
- * ESPAsyncWebServer  https://github.com/me-no-dev/AsyncTCP
- * LEDMatrix          https://github.com/AaronLiddiment/LEDMatrix
- * LEDText            https://github.com/AaronLiddiment/LEDText
- * 
- * WIRING
- * LED data     D2 via 470R resistor
- * GND          GND
- * Vin          5V
- * 
- * INMP441
- * VDD          3V3
- * GND          GND
- * L/R          GND
- * WS           D15
- * SCK          D14     
- * SD           D32
- * 
- * REFERENCES
- * Main code      Scott Marley            https://www.youtube.com/c/ScottMarley
- * Web server     Random Nerd Tutorials   https://randomnerdtutorials.com/esp32-web-server-slider-pwm/
- *                                  and   https://randomnerdtutorials.com/esp32-websocket-server-arduino/
- * Audio and mic  Andrew Tuline et al     https://github.com/atuline/WLED
- */
+// see main branch for all this info
 
 #include "audio_reactive.h"
 #include <FastLED.h>
@@ -108,7 +65,7 @@ void setup() {
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds[0], NUM_LEDS);
   Serial.begin(115200);
   delay(2000);
-
+  showStartupMessage("Welcome");
   setupWebServer();
   setupAudio();
 
@@ -247,17 +204,17 @@ void drawPatterns(uint8_t band) {
       break;
   }
 }
-void showChris() {
+void showStartupMessage(String s) {
   ScrollingMsg.SetFont(MatriseFontData);
   ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 0);
-  ScrollingMsg.SetText((unsigned char *)"Christian VU", 12);
+  ScrollingMsg.SetText((unsigned char *)s.c_str(), s.length());
   ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0xff, 0xff);
   ScrollingMsg.SetScrollDirection(SCROLL_LEFT);
   ScrollingMsg.SetFrameRate(160 / M_WIDTH);       // Faster for larger matrices
 
   while(ScrollingMsg.UpdateText() == 0) {
     FastLED.show();
-    delay(1);
+    delay(10);
   }
 }
 
