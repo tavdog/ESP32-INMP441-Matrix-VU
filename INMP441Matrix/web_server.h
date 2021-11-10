@@ -210,11 +210,13 @@ void setupWebServer(){
     delay (1000);
     Serial.println("Connecting to primary WiFi ...");
     connectionAttempts++;
-    if (connectionAttempts > 5) break;    
+    if (connectionAttempts > 5) {
+      
+      WiFi.begin(ssid2, password2);
+      break;    
+    }
   }
-
   while (WiFi.status() != WL_CONNECTED) {
-    WiFi.begin(ssid2, password2);
     delay (1000);
     Serial.println("Connecting to secondary WiFi ...");
     connectionAttempts++;

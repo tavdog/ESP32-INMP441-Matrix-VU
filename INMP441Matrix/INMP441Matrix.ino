@@ -9,8 +9,8 @@
 
 #define EEPROM_SIZE 5
 #define LED_PIN     2     // 16 for lora // 2 for chris's
-#define M_WIDTH     32
-#define M_HEIGHT    8
+#define M_WIDTH     16
+#define M_HEIGHT    16
 #define NUM_LEDS    (M_WIDTH * M_HEIGHT)
 
 #define EEPROM_BRIGHTNESS   0
@@ -28,8 +28,8 @@ bool autoChangePatterns = false;
 
 #include "web_server.h"
 
-//cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
-cLEDMatrix<(M_WIDTH), -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
+//cLEDMatrix<(M_WIDTH), -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
 cLEDText ScrollingMsg;
 
 uint8_t peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -209,9 +209,9 @@ void showStartupMessage(String s) {
   ScrollingMsg.SetFont(MatriseFontData);
   ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 0);
   ScrollingMsg.SetText((unsigned char *)s.c_str(), s.length());
-  ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0xff, 0xff);
+  ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_GRAD, 0x00, 0x00, 0xff);
   ScrollingMsg.SetScrollDirection(SCROLL_LEFT);
-  ScrollingMsg.SetFrameRate(160 / M_WIDTH);       // Faster for larger matrices
+  ScrollingMsg.SetFrameRate(60 / M_WIDTH);       // Faster for larger matrices
 
   while(ScrollingMsg.UpdateText() == 0) {
     FastLED.show();
