@@ -50,7 +50,9 @@ double fftResultMax[16];                // A table used for testing to determine
 int linearNoise[16] = { 34, 28, 26, 25, 20, 12, 9, 6, 4, 4, 3, 2, 2, 2, 2, 2 };
 
 // Table of multiplication factors so that we can even out the frequency response.
-double fftResultPink[16] = {1.70,1.71,1.73,1.78,1.68,1.56,1.55,1.63,1.79,1.62,1.80,2.06,2.47,3.35,6.83,9.55};
+//double fftResultPink[16] = {1.70,1.71,1.73,1.78,1.68,1.56,1.55,1.63,1.79,  1.62,1.80,2.06,2.47,3.35,6.83,9.55};
+//double fftResultPink[16] = {1.0,1.0,1.0,1.78,1.68,1.56,1.55,1.63,  2.79,  3.62,5.80,6.06,6.47,15.35,20.83,30.55};
+double fftResultPink[16] = {1,1,1,1,1,1,1,2,3,4,6,9,10,15,20,40};
 
 
 // Create FFT object

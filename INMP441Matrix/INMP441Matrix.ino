@@ -9,8 +9,8 @@
 
 #define EEPROM_SIZE 5
 #define LED_PIN     2     // 16 for lora // 2 for chris's
-#define M_WIDTH     16
-#define M_HEIGHT    16
+#define M_WIDTH     32
+#define M_HEIGHT    8
 #define NUM_LEDS    (M_WIDTH * M_HEIGHT)
 
 #define EEPROM_BRIGHTNESS   0
@@ -28,8 +28,8 @@ bool autoChangePatterns = false;
 
 #include "web_server.h"
 
-cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
-//cLEDMatrix<(M_WIDTH), -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+//cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
+cLEDMatrix<-M_WIDTH, M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
 cLEDText ScrollingMsg;
 
 uint8_t peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
