@@ -29,7 +29,7 @@ bool autoChangePatterns = false;
 #include "web_server.h"
 
 //cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
-cLEDMatrix<M_WIDTH, -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+cLEDMatrix<-M_WIDTH, M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
 cLEDText ScrollingMsg;
 
 uint8_t peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
