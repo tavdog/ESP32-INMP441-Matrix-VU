@@ -29,7 +29,7 @@ bool autoChangePatterns = false;
 #include "web_server.h"
 
 //cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
-cLEDMatrix<-M_WIDTH, M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+cLEDMatrix<M_WIDTH, -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
 cLEDText ScrollingMsg;
 
 uint8_t peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -208,10 +208,12 @@ void drawPatterns(uint8_t band) {
   }
 }
 void showStartupMessage(String s) {
+    FastLED.setBrightness(10);
+
   ScrollingMsg.SetFont(MatriseFontData);
   ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 0);
   ScrollingMsg.SetText((unsigned char *)s.c_str(), s.length());
-  ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_GRAD, 0x00, 0x00, 0xff);
+  ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_GRAD, 0x00, 0x00, 0x11);
   ScrollingMsg.SetScrollDirection(SCROLL_LEFT);
   ScrollingMsg.SetFrameRate(60 / M_WIDTH);       // Faster for larger matrices
 
