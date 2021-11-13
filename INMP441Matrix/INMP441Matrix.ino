@@ -8,7 +8,7 @@
 #include <EEPROM.h>
 
 #define EEPROM_SIZE 5
-#define LED_PIN     2     // 16 for lora // 2 for chris's
+#define LED_PIN     2     // 16 for lora // 2 for chris's // 21 for esp32feather
 #define M_WIDTH     32
 #define M_HEIGHT    8
 #define NUM_LEDS    (M_WIDTH * M_HEIGHT)
@@ -29,7 +29,7 @@ bool autoChangePatterns = false;
 #include "web_server.h"
 
 //cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
-cLEDMatrix<-M_WIDTH, M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+cLEDMatrix<M_WIDTH, -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
 cLEDText ScrollingMsg;
 
 uint8_t peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -65,9 +65,11 @@ uint8_t colorTimer = 0;
 void setup() {
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds[0], NUM_LEDS);
   Serial.begin(115200);
+  WiFi.begin();
   delay(2000);
   showStartupMessage("Welcome");
-  setupWebServer();
+  bool wificonnect = setupWiFi();
+  if (wificonnect) setupWebServer();
   setupAudio();
 
   if (M_WIDTH == 8) numBands = 8;

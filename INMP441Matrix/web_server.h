@@ -240,7 +240,43 @@ String processor(const String& var){
   
 }
 
-void setupWebServer(){
+/// connect to the network. return true if success, false if not.
+bool setupWiFi() {
+  Serial.println("go for setupWifi");
+  WiFi.mode(WIFI_STA);
+  // wait a bit for auto stored connection (esp saves previous succesfull connections)
+  while (WiFi.status() != WL_CONNECTED) {
+    static int i = 0;
+    delay(500);
+    Serial.print(".");
+    if (i++ > 10) break;
+  }
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("connected");
+    return true;
+  } else {
+    Serial.println("go for smartconfig");
+    WiFi.beginSmartConfig();
+
+    //Wait for SmartConfig packet from mobile
+    Serial.println("Waiting for SmartConfig.");
+    while (WiFi.status() != WL_CONNECTED) {
+      static int i = 0;
+      delay(500);
+      Serial.print(".");
+      if (i++ > 60) break;   // bail out after 30 seconds
+    }
+  }
+  if (WiFi.status() == WL_CONNECTED) {
+
+  Serial.println("WiFi Connected.");
+
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+  return true;
+
+
+  } else {   // try hard coded 
 
   uint8_t connectionAttempts = 0;
 
@@ -259,13 +295,20 @@ void setupWebServer(){
     delay (1000);
     Serial.println("Connecting to secondary WiFi ...");
     connectionAttempts++;
-    if (connectionAttempts > 10) break;    
+    if (connectionAttempts > 10) return false;    
   }
 
   // Print ESP Local IP Address
   Serial.print("Local IP address: ");
   Serial.println(WiFi.localIP());
+  return true;
 
+  }
+  return false;
+}
+
+
+void setupWebServer() {
   initWebSocket();
 
   // Route for root / web page
