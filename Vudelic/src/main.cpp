@@ -1,3 +1,4 @@
+#include <Arduino.h>
 // see main branch for all this info
 
 #include "audio_reactive.h"
@@ -61,6 +62,19 @@ CRGBPalette16 outrunPal = outrun_gp;
 CRGBPalette16 greenbluePal = greenblue_gp;
 CRGBPalette16 heatPal = redyellow_gp;
 uint8_t colorTimer = 0;
+
+// forward declarations
+void drawPatterns(uint8_t band);
+void showIP();
+void rainbowBars(uint8_t band, uint8_t barHeight);
+void purpleBars(int band, int barHeight);
+void changingBars(int band, int barHeight);
+void centerBars(int band, int barHeight);
+void whitePeak(int band);
+void showStartupMessage(String s);
+void outrunPeak(int band);
+void createWaterfall(int band);
+void moveWaterfall();
 
 void setup() {
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds[0], NUM_LEDS);
