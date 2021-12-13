@@ -271,7 +271,7 @@ bool setupWiFi() {
       static int i = 0;
       delay(500);
       Serial.print(".");
-      if (i++ > 60) break;   // bail out after 30 seconds
+      if (i++ > 20) break;   // bail out after 10 seconds
     }
   }
   if (WiFi.status() == WL_CONNECTED) {
