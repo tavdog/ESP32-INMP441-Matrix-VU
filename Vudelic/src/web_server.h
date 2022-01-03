@@ -12,12 +12,12 @@
 #include <ESPAsyncWebServer.h>
 
 // Replace with your primary network credentials
-const char* ssid = "PrimarySSID";
-const char* password = "PrimaryPassword";
+const char* ssid = "BeeBee2.4";
+const char* password = "bravestreet599";
 
 // Replace with your secondary network credentials
-const char* ssid2 = "SecondarySSID";
-const char* password2 = "SecondaryPassword";
+const char* ssid2 = "windytron";
+const char* password2 = "aaaaaaaa";
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -271,7 +271,10 @@ bool setupWiFi() {
       static int i = 0;
       delay(500);
       Serial.print(".");
-      if (i++ > 20) break;   // bail out after 10 seconds
+       if (i++ > 60) { 
+         WiFi.smartConfigDone();
+         break;   // bail out after 10 seconds
+       }
     }
   }
   if (WiFi.status() == WL_CONNECTED) {

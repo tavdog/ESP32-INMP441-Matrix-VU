@@ -11,7 +11,7 @@
 
 #define EEPROM_SIZE 5
 #define LED_PIN     2     // 16 for lora // 2 for chris's // 21 for esp32feather
-#define M_WIDTH     32
+#define M_WIDTH     8
 #define M_HEIGHT    8
 #define NUM_LEDS    (M_WIDTH * M_HEIGHT)
 
@@ -30,8 +30,8 @@ bool autoChangePatterns = false;
 
 #include "web_server.h"
 
-//cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
-cLEDMatrix<M_WIDTH, -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
+//cLEDMatrix<M_WIDTH, -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
 cLEDText ScrollingMsg;
 
 uint8_t peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -65,7 +65,7 @@ CRGBPalette16 heatPal = redyellow_gp;
 uint8_t colorTimer = 0;
 
 void showStartupMessage(String s) {
-    FastLED.setBrightness(10);
+    FastLED.setBrightness(20);
 
   ScrollingMsg.SetFont(MatriseFontData);
   ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 0);
