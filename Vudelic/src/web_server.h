@@ -12,6 +12,7 @@
 #include <ESPAsyncWebServer.h>
 
 // Replace with your primary network credentials
+#define HARDCODES
 const char* ssid = "BeeBee2.4";
 const char* password = "bravestreet599";
 
@@ -264,7 +265,7 @@ bool setupWiFi() {
   } else {
     Serial.println("go for smartconfig");
     WiFi.beginSmartConfig();
-
+    
     //Wait for SmartConfig packet from mobile
     Serial.println("Waiting for SmartConfig.");
     while (WiFi.status() != WL_CONNECTED) {
@@ -272,7 +273,7 @@ bool setupWiFi() {
       delay(500);
       Serial.print(".");
        if (i++ > 60) { 
-         WiFi.smartConfigDone();
+         WiFi.stopSmartConfig();
          break;   // bail out after 10 seconds
        }
     }
@@ -288,6 +289,7 @@ bool setupWiFi() {
 
   } else {   // try hard coded 
 
+#ifdef HARDCODES
   uint8_t connectionAttempts = 0;
 
   WiFi.begin(ssid, password);
@@ -295,12 +297,13 @@ bool setupWiFi() {
     delay (1000);
     Serial.println("Connecting to primary WiFi ...");
     connectionAttempts++;
-    if (connectionAttempts > 5) {
+    if (connectionAttempts > 10) {
       
       WiFi.begin(ssid2, password2);
       break;    
     }
   }
+  connectionAttempts = 0;
   while (WiFi.status() != WL_CONNECTED) {
     delay (1000);
     Serial.println("Connecting to secondary WiFi ...");
@@ -312,7 +315,7 @@ bool setupWiFi() {
   Serial.print("Local IP address: ");
   Serial.println(WiFi.localIP());
   return true;
-
+#endif
   }
   return false;
 }

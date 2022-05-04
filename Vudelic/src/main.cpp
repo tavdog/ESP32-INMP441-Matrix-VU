@@ -10,11 +10,19 @@
 #include <EEPROM.h>
 
 #define EEPROM_SIZE 5
-#define LED_PIN     2     // 16 for lora // 2 for chris's // 21 for esp32feather
-#define M_WIDTH     8
-#define M_HEIGHT    8
-#define NUM_LEDS    (M_WIDTH * M_HEIGHT)
+#define LED_PIN     21     // 16 for lora // 2 for chris's // 21 for esp32feather
 
+#define M_HEIGHT    8
+
+#ifdef WIDTH_32
+  #define M_WIDTH   32
+  cLEDMatrix<M_WIDTH, -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+#else
+  #define M_WIDTH   8
+  cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
+#endif
+
+#define NUM_LEDS    (M_WIDTH * M_HEIGHT)
 #define EEPROM_BRIGHTNESS   0
 #define EEPROM_GAIN         1
 #define EEPROM_SQUELCH      2
@@ -23,15 +31,14 @@
 
 uint8_t numBands;
 uint8_t barWidth;
-uint8_t pattern;
+uint8_t pattern = 4;
 uint8_t brightness;
 uint16_t displayTime;
 bool autoChangePatterns = false;
 
 #include "web_server.h"
 
-cLEDMatrix<M_WIDTH, M_HEIGHT, HORIZONTAL_ZIGZAG_MATRIX> leds;  // used for square shapes
-//cLEDMatrix<M_WIDTH, -M_HEIGHT, VERTICAL_ZIGZAG_MATRIX> leds;    // used for rectangle wide
+
 cLEDText ScrollingMsg;
 
 uint8_t peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -228,7 +235,7 @@ void setup() {
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds[0], NUM_LEDS);
   Serial.begin(115200);
   WiFi.begin();
-  delay(2000);
+  //delay(2000);
   showStartupMessage("Welcome");
   bool wificonnect = setupWiFi();
   if (wificonnect) setupWebServer();
@@ -246,9 +253,9 @@ void setup() {
   // (new board?) so reset the values to something sane.
   if (EEPROM.read(EEPROM_GAIN) == 255) {
     EEPROM.write(EEPROM_BRIGHTNESS, 50);
-    EEPROM.write(EEPROM_GAIN, 0);
+    EEPROM.write(EEPROM_GAIN, 16);
     EEPROM.write(EEPROM_SQUELCH, 0);
-    EEPROM.write(EEPROM_PATTERN, 0);
+    EEPROM.write(EEPROM_PATTERN, 4);
     EEPROM.write(EEPROM_DISPLAY_TIME, 10);
     EEPROM.commit();
   }
